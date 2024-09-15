@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id                    Int            @id @default(autoincrement())
+  invoiceId             String         @unique
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  fullLegalName         String?
+  email                 String
+  discordDisplayName    String?
+  discordUsername       String?
+  country               String?
+  phoneNumber           String?
+  redditUsername        String?
+  redditUserLink        String?
+  invoiceAmount         String?
+  invoiceStatus         String?
+  taskDescription       String?
+  hourlyRate            String?
+  hoursWorked           String?
+  invoiceType           String?
+  paypalEmail           String?
+  paypalDob             DateTime?
+  ltcWalletAddress      String?
+  paymentMethod         String?
+  isPayPalAccountHolder Boolean?
+  otherPaymentDetails   String?
+  notes                 String?
+}
+
+enum InvoiceStatus {
+  PAID
+  UNPAID
+  OTHER
+}
+
+enum PricingType {
+  HOURLY_RATE
+  FIXED_PRICE
+}
+
+enum PaymentMethod {
+  LTC_CRYPTO
+  PAYPAL_GOODS_AND_SERVICES
+  OTHER_AS_DISCUSSED
+}
