@@ -368,7 +368,7 @@ export function FormN() {
                         <FormItem>
                           <FormLabel>Hourly Rate</FormLabel>
                           <FormControl>
-                            <Input placeholder="3.00" {...field} />
+                            <Input placeholder="2.00" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -485,10 +485,10 @@ export function FormN() {
                       name="paypalEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>PayPal Link or Email</FormLabel>
+                          <FormLabel>PayPal Email</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="paypalemail@example.com or paypal.me link"
+                              placeholder="PayPalEmail@example.com"
                               {...field}
                             />
                           </FormControl>
