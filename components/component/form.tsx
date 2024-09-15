@@ -204,7 +204,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Full Legal Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} />
+                          <Input placeholder="Matt Jackson" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -217,7 +217,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="john@example.com" {...field} />
+                          <Input placeholder="mattyjacks11@gmail.com" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -232,7 +232,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Discord Display Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="JohnD#1234" {...field} />
+                          <Input placeholder="Matt Jackson" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -245,7 +245,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Discord Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="JohnD" {...field} />
+                          <Input placeholder="@mattyjacks" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -258,9 +258,9 @@ export function FormN() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
+                        <FormLabel>WhatsApp Phone Number</FormLabel>
                         <FormControl>
-                          <Input placeholder="+1 (555) 555-5555" {...field} />
+                          <Input placeholder="+15106005735" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -273,7 +273,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Reddit Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="u/JohnDoe" {...field} />
+                          <Input placeholder="u/growthget" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -288,7 +288,7 @@ export function FormN() {
                       <FormItem>
                         <FormLabel>Country</FormLabel>
                         <FormControl>
-                          <Input placeholder="India" {...field} />
+                          <Input placeholder="USA" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -300,7 +300,7 @@ export function FormN() {
                       onValueChange={(newValue) =>
                         form.setValue("invoiceId", generateInvoiceID(newValue))
                       }
-                      defaultValue={"Hypnosis Capital"}
+                      defaultValue={"MattyJacks"}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select the person" />
@@ -368,7 +368,7 @@ export function FormN() {
                         <FormItem>
                           <FormLabel>Hourly Rate</FormLabel>
                           <FormControl>
-                            <Input placeholder="50.00" {...field} />
+                            <Input placeholder="3.00" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -381,7 +381,7 @@ export function FormN() {
                         <FormItem>
                           <FormLabel>Hours Worked</FormLabel>
                           <FormControl>
-                            <Input placeholder="40" {...field} />
+                            <Input placeholder="5" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -396,7 +396,7 @@ export function FormN() {
                     <FormItem>
                       <FormLabel>Invoice Amount</FormLabel>
                       <FormControl>
-                        <Input placeholder="100.00" {...field} />
+                        <Input placeholder="10.00" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -488,7 +488,7 @@ export function FormN() {
                           <FormLabel>PayPal Link or Email</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="paypal@example.com or paypalLink"
+                              placeholder="paypalemail@example.com or paypal.me link"
                               {...field}
                             />
                           </FormControl>
@@ -603,7 +603,7 @@ export function FormN() {
                               )
                             }
                           >
-                            Check Activity
+                            Check Wallet Activity
                           </Button>
                         </FormDescription>
                         <FormMessage />
@@ -667,8 +667,7 @@ export function FormN() {
                     />
                   </FormControl>
                   <FormDescription>
-                    Please upload the JSON file for the invoice to prefill the
-                    information
+                    Save time next time you fill out this form! Download the JSON file after you're done filling it out, and upload it to pre-fill the data.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
