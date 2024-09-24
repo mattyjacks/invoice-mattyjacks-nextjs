@@ -79,7 +79,7 @@ const formSchema = z.object({
 
 function generateInvoiceID(person?: string) {
   const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
-  let result = person === "Hypnosis Capital" ? "HC-" : "MJ-";
+  let result = person === "MattyJacks" ? "MJ-" : "HC-";
   for (let i = 0; i < 7; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
@@ -113,7 +113,7 @@ export function FormN() {
       paymentMethod: "",
       otherPaymentDetails: "",
       notes: "",
-      invoiceId: generateInvoiceID("Hypnosis Capital"),
+      invoiceId: generateInvoiceID("MattyJacks"),
     },
   });
 
@@ -509,7 +509,7 @@ export function FormN() {
                           </FormControl>
                           <div>
                             <FormDescription className="flex items-center justify-center">
-                              Are you the owner of this PayPal account?{" "}
+                              Are you not the owner of this PayPal account?{" "}
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
@@ -528,13 +528,13 @@ export function FormN() {
                         </FormItem>
                       )}
                     />
-                    {form.watch("isPayPalAccountHolder") === false && (
+                    {form.watch("isPayPalAccountHolder") === true && (
                       <FormField
                         control={form.control}
                         name="paypalDob"
                         render={({ field }) => (
                           <FormItem className="flex flex-col ">
-                            <FormLabel>PayPal DOB</FormLabel>
+                            <FormLabel>Your DOB</FormLabel>
                             <FormControl>
                               <Popover>
                                 <PopoverTrigger asChild>
@@ -656,43 +656,56 @@ export function FormN() {
                 />
 
                 <FormItem>
-                  <FormLabel>Upload the Json file</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept=".json"
-                      onChange={(e) => {
-                        handleFileUpload(e);
-                      }}
-                    />
-                  </FormControl>
+                  <FormLabel>Descirption</FormLabel>
+                  
                   <FormDescription>
-                    Save time next time you fill out this form! Download the JSON file after you're done filling it out, and upload it to pre-fill the data.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac porta felis. Nam ac tortor venenatis neque dignissim ultricies at sed quam. Phasellus id tempus eros, aliquet finibus urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus pulvinar tempor magna. Aenean sed felis faucibus tortor pharetra euismod eu vel dolor. Suspendisse interdum varius magna, a facilisis felis aliquam eget. Integer at nisl sed tortor malesuada faucibus vel vel leo. Ut dapibus odio quis porttitor condimentum. Morbi eu elit sed sem maximus aliquet.
+                 
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
-              </div>
+              </div>  
             </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full" disabled={Loading}>
-                {Loading ? (
-                  <span className="flex items-center justify-center gap-3">
-                    Submitting
-                    <div
-                      className={`animate-spin rounded-full border-t-2 border-b-2 text-blue-600 w-6 h-6 mr-5`}
-                    />{" "}
-                  </span>
-                ) : (
-                  <span>Submit</span>
-                )}
-              </Button>
-              <Button
-                className="w-full ml-2 bg-green-500 "
-                onClick={handleDownloadJson}
-              >
-                Download JSON <FileJson className="size-5 ml-2" />
-              </Button>
-            </CardFooter>
+            <CardFooter className="flex justify-center">
+  <input
+    type="file"
+    accept=".json"
+    style={{ display: "none" }} // This hides the input element
+    id="jsonFileInput" // ID to reference the input
+    onChange={(e) => handleFileUpload(e)} // Handle file upload
+  />
+
+  <div className="flex space-x-4">
+    {/* Download JSON Button on the left */}
+    <Button
+      className="bg-green-500"
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '200px' }} // Equal width
+      onClick={handleDownloadJson}
+    >
+      Download JSON <FileJson className="size-5 ml-2" />
+    </Button>
+
+    {/* Upload JSON Button on the right */}
+    <Button
+      className="bg-blue-500"
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '200px' }} // Equal width
+      onClick={(e) => {
+        e.preventDefault(); // Prevent form validation
+        setTimeout(() => {
+          const inputElement = document.getElementById("jsonFileInput");
+          if (inputElement) {
+            inputElement.click(); // Open the file dialog
+          }
+        }, 0); // Delay to ensure the DOM is ready
+      }}
+    >
+      Upload JSON <FileJson className="size-5 ml-2" />
+    </Button>
+  </div>
+</CardFooter>
+
+
+
           </form>
         </Form>
       </Card>
