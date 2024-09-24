@@ -307,10 +307,10 @@ export function FormN() {
                       </SelectTrigger>
 
                       <SelectContent>
+                        <SelectItem value="MattyJacks">MattyJacks</SelectItem>
                         <SelectItem value="Hypnosis Capital">
                           Hypnosis Capital
                         </SelectItem>
-                        <SelectItem value="MattyJacks">MattyJacks</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
