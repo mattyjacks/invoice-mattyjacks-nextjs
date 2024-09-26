@@ -320,7 +320,7 @@ export function FormN() {
               {/* Payment Information section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mt-6">
-                  Payment Information
+                  Payment Info
                 </h3>
                 <FormField
                   control={form.control}
@@ -427,28 +427,12 @@ export function FormN() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="taskDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Task Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Describe the task..."
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                
               </div>
 
               {/* Payment Info section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold mt-6">Payment Info</h3>
+                
                 <FormField
                   control={form.control}
                   name="paymentMethod"
@@ -508,22 +492,24 @@ export function FormN() {
                             />
                           </FormControl>
                           <div>
-                            <FormDescription className="flex items-center justify-center">
-                              Are you not the owner of this PayPal account?{" "}
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="ml-3 size-4" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>
-                                      Placeholder Tooltip for PayPal account
-                                      non-holder
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </FormDescription>
+                          <FormDescription className="flex flex-col items-start">
+  Are you NOT the owner of this PayPal account?{" "}
+  <br />
+  <span style={{ fontSize: '0.8em', color: 'grey' }}>
+    Description
+  </span>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipContent>
+        <p>
+          Placeholder Tooltip for PayPal account non-holder
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</FormDescription>
+
+
                           </div>
                         </FormItem>
                       )}
@@ -534,7 +520,7 @@ export function FormN() {
                         name="paypalDob"
                         render={({ field }) => (
                           <FormItem className="flex flex-col ">
-                            <FormLabel>Your DOB</FormLabel>
+                            <FormLabel>Your Date of Birth</FormLabel>
                             <FormControl>
                               <Popover>
                                 <PopoverTrigger asChild>
@@ -635,35 +621,66 @@ export function FormN() {
               {/* Additional Information section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mt-6">
-                  Additional Information
+                  Additional Info
                 </h3>
                 <FormField
                   control={form.control}
                   name="notes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Notes</FormLabel>
-                      <FormControl>
+                    <FormLabel>Notes</FormLabel>
+                    <FormControl>
+                      <React.Fragment>
                         <Textarea
                           placeholder="Add any additional notes..."
-                          className="resize-none"
+                          className="resize-none placeholder-grey" // Add class for placeholder styling
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                        <style jsx>{`
+                          .placeholder-grey::placeholder {
+                            color: grey; /* Set placeholder text color */
+                          }
+                        `}</style>
+                      </React.Fragment>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                  
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="taskDescription"
+                  render={({ field }) => (
+                    <FormItem>
+  <FormLabel>Task Description</FormLabel>
+  <FormControl>
+    <React.Fragment>
+      <Textarea
+        placeholder="Required..."
+        className="resize-none placeholder-grey" // Add class for placeholder styling
+        {...field}
+      />
+      <style jsx>{`
+        .placeholder-grey::placeholder {
+          color: grey; /* Set placeholder text color */
+        }
+      `}</style>
+    </React.Fragment>
+  </FormControl>
+  <FormMessage />
+</FormItem>
+
                   )}
                 />
 
-                <FormItem>
-                  <FormLabel>Descirption</FormLabel>
-                  
-                  <FormDescription>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac porta felis. Nam ac tortor venenatis neque dignissim ultricies at sed quam. Phasellus id tempus eros, aliquet finibus urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus pulvinar tempor magna. Aenean sed felis faucibus tortor pharetra euismod eu vel dolor. Suspendisse interdum varius magna, a facilisis felis aliquam eget. Integer at nisl sed tortor malesuada faucibus vel vel leo. Ut dapibus odio quis porttitor condimentum. Morbi eu elit sed sem maximus aliquet.
-                 
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+<FormItem>
+  <FormDescription style={{ fontSize: '0.8em', color: 'grey', margin: '0' }}>
+    Save time next time you fill out this form! Download the JSON formatted file after you're done filling it out, and upload it to pre-fill the data.
+  </FormDescription>
+  <FormMessage />
+</FormItem>
+
               </div>  
             </CardContent>
             <CardFooter className="flex justify-center">
