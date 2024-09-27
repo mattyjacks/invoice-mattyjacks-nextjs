@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
+import { useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -40,12 +41,34 @@ import { CalendarIcon, FileJson, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+
+function InvoiceForm() {
+  const form = useForm({
+    defaultValues: {
+      hourlyRate: '',
+      hoursWorked: '',
+      invoiceAmount: '',
+    },
+  });
+
+  const { watch, setValue } = form;
+  const hourlyRate = watch('hourlyRate');
+  const hoursWorked = watch('hoursWorked');
+
+  // Auto calculate invoice amount based on hourly rate and hours worked
+  useEffect(() => {
+    const rate = parseFloat(hourlyRate) || 0;
+    const hours = parseFloat(hoursWorked) || 0;
+    const invoiceAmount = (rate * hours).toFixed(2); // Multiply and round to 2 decimals
+    setValue('invoiceAmount', invoiceAmount); // Set the calculated value in the invoiceAmount field
+  }, [hourlyRate, hoursWorked, setValue]);}
 
 export type FormSchemaType = z.infer<typeof formSchema>;
 
@@ -61,6 +84,8 @@ const formSchema = z.object({
   phoneNumber: z.string(),
   redditUsername: z.string().optional(),
   country: z.string(),
+  customName: z.string().optional(),
+  customEmail: z.string().email().optional(),
   paypalEmail: z.string().optional(),
   paypalDob: z.date().optional(),
   invoiceType: z.enum(["one-time", "hourly"]),
@@ -77,13 +102,42 @@ const formSchema = z.object({
   isPayPalAccountHolder: z.boolean().default(false),
 });
 
-function generateInvoiceID(person?: string) {
-  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
-  let result = person === "MattyJacks" ? "MJ-" : "HC-";
-  for (let i = 0; i < 7; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
+function generateInvoiceID(person?: string): string {
+  const possibleCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+  const SPECIAL_PREFIX_MATTYJACKS = "MJ-";
+  const SPECIAL_PREFIX_FIREBRINGERAI = "FB-";
+  const DEFAULT_PREFIX = "HC-";
+
+  let result;
+  switch (person) {
+    case "MattyJacks":
+      result = SPECIAL_PREFIX_MATTYJACKS;
+      break;
+    case "FirebringerAI":
+      result = SPECIAL_PREFIX_FIREBRINGERAI;
+      break;
+    default:
+      result = DEFAULT_PREFIX;
   }
+
+  const randomCharacters = Array.from({ length: 7 }, () =>
+    possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length))
+  );
+
+  result += randomCharacters.join("");
+
   return result;
+}
+
+function getEmailAddress(person?: string): string {
+  switch (person) {
+    case "MattyJacks":
+      return "Matty@firebringerai.com";
+    case "FirebringerAI":
+      return "Justin@firebringerai.com";
+    default:
+      return "";
+  }
 }
 
 export function FormN() {
@@ -100,6 +154,8 @@ export function FormN() {
       phoneNumber: "",
       redditUsername: "",
       country: "",
+      customName: "",
+    customEmail: "",
       paypalEmail: "",
       invoiceType: "one-time",
       invoiceAmount: "",
@@ -183,6 +239,8 @@ export function FormN() {
       form.reset();
     }
   }
+  const [selectedRecipient, setSelectedRecipient] = useState("MattyJacks"); // Default value
+
 
   return (
     <div className=" flex flex-col justify-center items-center gap-6">
@@ -295,25 +353,95 @@ export function FormN() {
                     )}
                   />
                   <FormItem className="mt-4 md:mt-0">
-                    <FormLabel>Send Invoice to</FormLabel>
-                    <Select
-                      onValueChange={(newValue) =>
-                        form.setValue("invoiceId", generateInvoiceID(newValue))
-                      }
-                      defaultValue={"MattyJacks"}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select the person" />
-                      </SelectTrigger>
+  <FormLabel>Send Invoice To</FormLabel>
+  <Select
+     onValueChange={(newValue) => {
+      if (newValue === "custom") {
+        form.setValue("invoiceId", "INV-" + Math.random().toString(36).substr(2, 7));
+      } else {
+        form.setValue("invoiceId", generateInvoiceID(newValue));
+      }
+      setSelectedRecipient(newValue);
+    }}
+    defaultValue={"MattyJacks"}
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Select the person" />
+    </SelectTrigger>
 
-                      <SelectContent>
-                        <SelectItem value="MattyJacks">MattyJacks</SelectItem>
-                        <SelectItem value="Hypnosis Capital">
-                          Hypnosis Capital
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
+    <SelectContent>
+      <SelectItem value="MattyJacks">MattyJacks</SelectItem>
+      <SelectItem value="Hypnosis Capital">Hypnosis Capital</SelectItem>
+      <SelectItem value="FirebringerAI">FirebringerAI</SelectItem>
+      <SelectItem value="custom">Custom</SelectItem>
+    </SelectContent>
+  </Select>
+</FormItem>
+
+
+{selectedRecipient === "custom" && (
+  <>
+    <FormField
+      control={form.control}
+      name="customName"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Custom Name</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter custom name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="customEmail"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Custom Email</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter custom email" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  </>
+)}
+
+{/* Instructions Section */}
+<div className="mt-4">
+  {selectedRecipient === "MattyJacks" && (
+    <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
+      If you're facing any issues, please feel free to contact mattyjacks@gmail.com.
+    </p>
+  )}
+  {selectedRecipient === "Hypnosis Capital" && (
+    <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
+      If you're facing any issues, please feel free to contact hypnosiscapital.com.
+    </p>
+  )}
+  {selectedRecipient === "FirebringerAI" && (
+    <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
+      If you're facing any issues, please feel free to contact Matt@firebringerai.com or Justin@firebringerai.com
+    </p>
+  )}
+  {selectedRecipient === "custom" && (
+    <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
+      If you're facing any issues, please contact {form.watch("customName")} at {form.watch("customEmail")}.
+    </p>
+  )}
+</div>
+
+
+
+
+{/* Invoice Preview Section */}
+<div>
+  {/* Invoice Preview component/code here */}
+</div>
+
                 </div>
               </div>
 
@@ -360,73 +488,107 @@ export function FormN() {
                   )}
                 />
                 {showFields && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="hourlyRate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Hourly Rate</FormLabel>
-                          <FormControl>
-                            <Input placeholder="2.00" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="hoursWorked"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Hours Worked</FormLabel>
-                          <FormControl>
-                            <Input placeholder="5" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-                <FormField
-                  control={form.control}
-                  name="invoiceAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Invoice Amount</FormLabel>
-                      <FormControl>
-                        <Input placeholder="10.00" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="invoiceStatus"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Invoice Status</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select invoice status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="paid">Paid</SelectItem>
-                          <SelectItem value="unpaid">Unpaid</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+  <div className="grid grid-cols-2 gap-4">
+    <FormField
+      control={form.control}
+      name="hourlyRate"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Hourly Rate</FormLabel>
+          <FormControl>
+            <Input placeholder="2.00" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="hoursWorked"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Hours Worked</FormLabel>
+          <FormControl>
+            <Input placeholder="5" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+
+        
+      )}
+      
+    />
+
+    
+  </div>
+
+
+
+)}
+
+{showFields && (
+  <div className="flex justify-end mb-4">
+    <Button
+      className="bg-blue-500"
+      onClick={() => {
+        const hourlyRate = parseFloat(form.watch("hourlyRate")) || 0;
+        const hoursWorked = parseFloat(form.watch("hoursWorked")) || 0;
+        const invoiceAmount = (hourlyRate * hoursWorked).toFixed(2);
+        form.setValue("invoiceAmount", invoiceAmount);
+      }}
+    >
+      Calculate
+    </Button>
+  </div>
+)}
+
+<FormField
+  control={form.control}
+  name="invoiceAmount"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Invoice Amount</FormLabel>
+      <div className="flex items-center border rounded-md">
+        <span className="px-2">$</span> {/* Dollar sign */}
+        <FormControl className="flex-grow">
+          <Input
+            placeholder="10.00"
+            {...field}
+            className="border-none focus:ring-0" // Remove border and focus ring from input
+          />
+        </FormControl>
+        <span className="px-2">USD</span> {/* Currency label */}
+      </div>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+<FormField
+    control={form.control}
+    name="invoiceStatus"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel>Invoice Status</FormLabel>
+        <Select
+          onValueChange={field.onChange}
+          defaultValue={field.value}
+        >
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Select invoice status" />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            <SelectItem value="paid">Paid</SelectItem>
+            <SelectItem value="unpaid">Unpaid</SelectItem>
+          </SelectContent>
+        </Select>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
                 
               </div>
 
@@ -576,24 +738,40 @@ export function FormN() {
                     name="ltcWalletAddress"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>LTC Wallet Address</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Wallet Address" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          <Button
-                            className="w-fit bg-red-500 text-white hover:text-black"
-                            onClick={() =>
-                              window.open(
-                                `https://blockchair.com/litecoin/address/${field.value}`
-                              )
-                            }
-                          >
-                            Check Wallet Activity
-                          </Button>
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
+  <FormLabel>LTC Wallet Address</FormLabel>
+  <FormControl>
+    <Input placeholder="Wallet Address" {...field} />
+  </FormControl>
+  <FormDescription>
+    <Button
+      className="w-fit bg-blue-500 text-white hover:text-black flex items-center"
+      onClick={() =>
+        window.open(
+          `https://blockchair.com/litecoin/address/${field.value}`
+        )
+      }
+    >
+      Check Wallet Activity 
+      <svg
+        width="19px"
+        height="19px"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="ml-2"
+        style={{ marginTop: '2px', marginLeft: '4px' }} // Adjust margins here
+      >
+        
+        <path d="M10 16V14.0003M10 14.0003V12M10 14.0003L12 14.0005M10 14.0003L8 14M21 12V11.2C21 10.0799 21 9.51984 20.782 9.09202C20.5903 8.71569 20.2843 8.40973 19.908 8.21799C19.4802 8 18.9201 8 17.8 8H3M21 12V16M21 12H19C17.8954 12 17 12.8954 17 14C17 15.1046 17.8954 16 19 16H21M21 16V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8V8M18 8V7.2C18 6.0799 18 5.51984 17.782 5.09202C17.5903 4.71569 17.2843 4.40973 16.908 4.21799C16.4802 4 15.9201 4 14.8 4H6.2C5.07989 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.0799 3 7.2V8" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      
+    </Button>
+    <span style={{ fontSize: '0.9em', color: 'grey' }}>
+    If you've never used this wallet before, the blockchain history will be blank. If you have used this wallet before, there will be Blockchair history. This is to help ensure that the LTC address is correct. If you type in the wrong address and we send the LTC to the address you've entered, then the payment is still considered complete, so please be careful. You can request a test transaction if it's a new wallet to ensure safety.
+  </span>
+  </FormDescription>
+  <FormMessage />
+</FormItem>
                     )}
                   />
                 )}
@@ -618,11 +796,41 @@ export function FormN() {
                 )}
               </div>
 
+
+              
+
               {/* Additional Information section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mt-6">
                   Additional Info
                 </h3>
+
+
+                <FormField
+                  control={form.control}
+                  name="taskDescription"
+                  render={({ field }) => (
+                    <FormItem>
+  <FormLabel>Task Description</FormLabel>
+  <FormControl>
+    <React.Fragment>
+      <Textarea
+        placeholder="Describe the task, and the results. This part is required in order to be paid."
+        className="resize-none placeholder-grey" // Add class for placeholder styling
+        {...field}
+      />
+      <style jsx>{`
+        .placeholder-grey::placeholder {
+          color: grey; /* Set placeholder text color */
+        }
+      `}</style>
+    </React.Fragment>
+  </FormControl>
+  <FormMessage />
+</FormItem>
+
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="notes"
@@ -648,31 +856,7 @@ export function FormN() {
                   
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="taskDescription"
-                  render={({ field }) => (
-                    <FormItem>
-  <FormLabel>Task Description</FormLabel>
-  <FormControl>
-    <React.Fragment>
-      <Textarea
-        placeholder="Required..."
-        className="resize-none placeholder-grey" // Add class for placeholder styling
-        {...field}
-      />
-      <style jsx>{`
-        .placeholder-grey::placeholder {
-          color: grey; /* Set placeholder text color */
-        }
-      `}</style>
-    </React.Fragment>
-  </FormControl>
-  <FormMessage />
-</FormItem>
-
-                  )}
-                />
+                
 
 <FormItem>
   <FormDescription style={{ fontSize: '0.8em', color: 'grey', margin: '0' }}>
