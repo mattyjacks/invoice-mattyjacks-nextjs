@@ -82,7 +82,7 @@ Notes: ${formValues.notes}
     navigator.clipboard
       .writeText(content)
       .then(() => {
-        alert("Copied Successful");
+        alert("Email Content Copied Successfully");
       })
       .catch((err) => {
         console.error("Failed to copy content:", err);

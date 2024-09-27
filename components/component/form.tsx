@@ -81,7 +81,9 @@ const formSchema = z.object({
   }),
   discordDisplayName: z.string().optional(),
   discordUsername: z.string().optional(),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().min(10, {
+    message: "Phone number must be at least 10 digits.",
+  }), // Ensure phone number is at least 10 digits
   redditUsername: z.string().optional(),
   country: z.string(),
   customName: z.string().optional(),
@@ -93,7 +95,9 @@ const formSchema = z.object({
   hourlyRate: z.string().optional(),
   hoursWorked: z.string().optional(),
   ltcWalletAddress: z.string().optional(),
-  taskDescription: z.string(),
+  taskDescription: z.string().min(1, {
+    message: "Task description is required.",
+  }),
   invoiceStatus: z.string(),
   paymentMethod: z.string(),
   notes: z.string().optional(),
@@ -101,6 +105,7 @@ const formSchema = z.object({
   otherPaymentDetails: z.string().optional(),
   isPayPalAccountHolder: z.boolean().default(false),
 });
+
 
 function generateInvoiceID(person?: string): string {
   const possibleCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
@@ -181,6 +186,14 @@ export function FormN() {
 
   const handleDownloadJson = () => {
     const jsonData = generateJsonData();
+    const dataObj = JSON.parse(jsonData);
+  
+    // Check if 'name' and 'email' are present
+    if (!dataObj.name || !dataObj.email) {
+      alert("You need to fill required details before downloading the File. ");
+      return;
+    }
+  
     const blob = new Blob([jsonData], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -191,6 +204,7 @@ export function FormN() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+  
 
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -815,7 +829,7 @@ export function FormN() {
   <FormControl>
     <React.Fragment>
       <Textarea
-        placeholder="Describe the task, and the results. This part is required in order to be paid."
+        placeholder="Required..."
         className="resize-none placeholder-grey" // Add class for placeholder styling
         {...field}
       />
