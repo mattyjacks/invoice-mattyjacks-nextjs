@@ -110,7 +110,7 @@ const formSchema = z.object({
 function generateInvoiceID(person?: string): string {
   const possibleCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
   const SPECIAL_PREFIX_MATTYJACKS = "MJ-";
-  const SPECIAL_PREFIX_FIREBRINGERAI = "FB-";
+  const SPECIAL_PREFIX_FIREBRINGERAI = "FBAI-";
   const DEFAULT_PREFIX = "HC-";
 
   let result;
