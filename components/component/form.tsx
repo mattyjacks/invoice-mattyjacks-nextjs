@@ -330,7 +330,7 @@ export function FormN() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>WhatsApp Phone Number</FormLabel>
+                        <FormLabel>WhatsApp Phone Number with Country Code</FormLabel>
                         <FormControl>
                           <Input placeholder="+15106005735" {...field} />
                         </FormControl>
@@ -371,7 +371,7 @@ export function FormN() {
   <Select
      onValueChange={(newValue) => {
       if (newValue === "custom") {
-        form.setValue("invoiceId", "INV-" + Math.random().toString(36).substr(2, 7));
+        form.setValue("invoiceId", "INV-" + Math.random().toString(36).substr(2, 7).toUpperCase());
       } else {
         form.setValue("invoiceId", generateInvoiceID(newValue));
       }
@@ -400,9 +400,9 @@ export function FormN() {
       name="customName"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Custom Name</FormLabel>
+          <FormLabel>Custom Company Name to Invoice</FormLabel>
           <FormControl>
-            <Input placeholder="Enter custom name" {...field} />
+            <Input placeholder="Enter Custom Company Name to Invoice" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -424,7 +424,7 @@ export function FormN() {
   </>
 )}
 
-{/* Instructions Section */}
+{/* Instructions Section 
 <div className="mt-4">
   {selectedRecipient === "MattyJacks" && (
     <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
@@ -447,6 +447,7 @@ export function FormN() {
     </p>
   )}
 </div>
+*/}
 
 
 
@@ -627,7 +628,7 @@ export function FormN() {
                         <SelectContent>
                           <SelectItem value="ltc-crypto">LTC Crypto</SelectItem>
                           <SelectItem value="paypal">
-                            Paypal Goods And Services
+                            Paypal Goods and Services
                           </SelectItem>
                           <SelectItem value="others">
                             Other as Discussed
@@ -829,7 +830,7 @@ export function FormN() {
   <FormControl>
     <React.Fragment>
       <Textarea
-        placeholder="Required..."
+        placeholder="Describe the task, and the results. This part is required in order to be paid."
         className="resize-none placeholder-grey" // Add class for placeholder styling
         {...field}
       />

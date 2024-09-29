@@ -108,7 +108,7 @@ Notes: ${formValues.notes}
   return (
     <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white">Invoice Detail</CardTitle>
+        <CardTitle className="text-2xl font-bold text-white">Invoice Overview</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
