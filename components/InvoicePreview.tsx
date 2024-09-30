@@ -37,6 +37,28 @@ const InvoicePreview = ({ control }: { control: any }) => {
     }
   };
 
+  const getInvoiceDetails = () => {
+    const invoiceId = formValues.invoiceId || "";
+    const customName = formValues.customName || "";
+    const customEmail = formValues.customEmail || "";
+  
+    if (customName) {
+      return { name: customName, email: customEmail };
+    } else if (invoiceId.startsWith("MJ")) {
+      return { name: "MattyJacks", email: "mattyjacks11@gmail.com" };
+    } else if (invoiceId.startsWith("HC")) {
+      return { name: "Hypnosis Capital", email: "hypnosiscapital.com" };
+    } else if (invoiceId.startsWith("FB")) {
+      return { name: "FirebringerAI", email: "Matt@firebringerai.com or " };
+    } else if (invoiceId.startsWith("Inv")) {
+      return { name: "Unknown", email: "N/A" }; // or a default email
+    }
+    else {
+      return { name: "Unknown", email: "N/A" };
+    }
+  };
+  
+
   const copyToClipboard = () => {
     const invoiceId = formValues.invoiceId || "N/A";
     const fullName = formValues.fullLegalName || "N/A";
@@ -111,15 +133,18 @@ Notes: ${formValues.notes}
         <CardTitle className="text-2xl font-bold text-white">Invoice Overview</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <h3 className="text-lg font text-white">Invoice Details</h3>
-          {renderField("Invoice ID", formValues.invoiceId)}
-          {renderField("Sending Invoice To", `${getInvoiceName()} `)}
-          {renderField("Email Subject Line", `Invoice ${formValues.invoiceId} for ${formValues.fullLegalName} on ${format(new Date(), "MMMM do, yyyy")}`)}
-          {renderField("Invoice Date EST", format(toZonedTime(new Date(), 'America/New_York'), "EEEE, MMMM do, yyyy 'at' p 'EST'"))}
-          {renderField("Invoice Date Local", format(new Date(), "EEEE, MMMM do, yyyy 'at' p"))}
-          {renderField("Invoice Date GMT", format(toZonedTime(new Date(), 'GMT'), "EEEE, MMMM do, yyyy 'at' p 'GMT'"))}
-        </div>
+  <div className="space-y-2">
+    <h3 className="text-lg font text-white">Invoice Details</h3>
+    {renderField("Invoice ID", formValues.invoiceId)}
+    {renderField("Sending Invoice To", `${getInvoiceDetails().name} `)}
+    {renderField("Email Being Invoiced", getInvoiceDetails().email)} {/* New line */}
+    {renderField("Email Subject Line", `Invoice ${formValues.invoiceId} for ${formValues.fullLegalName} on ${format(new Date(), "MMMM do, yyyy")}`)}
+    {renderField("Invoice Date EST", format(toZonedTime(new Date(), 'America/New_York'), "EEEE, MMMM do, yyyy 'at' p 'EST'"))}
+    {renderField("Invoice Date Local", format(new Date(), "EEEE, MMMM do, yyyy 'at' p"))}
+    {renderField("Invoice Date GMT", format(toZonedTime(new Date(), 'GMT'), "EEEE, MMMM do, yyyy 'at' p 'GMT'"))}
+  </div>
+
+
 
         <div className="space-y-2">
           <h3 className="text-lg font-semibold text-white">Personal Info</h3>

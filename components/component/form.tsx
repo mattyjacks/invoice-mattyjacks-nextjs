@@ -189,7 +189,7 @@ export function FormN() {
     const dataObj = JSON.parse(jsonData);
   
     // Check if 'name' and 'email' are present
-    if (!dataObj.name || !dataObj.email) {
+    if (!dataObj.fullLegalName || !dataObj.email) {
       alert("You need to fill required details before downloading the File. ");
       return;
     }
@@ -428,7 +428,7 @@ export function FormN() {
 <div className="mt-4">
   {selectedRecipient === "MattyJacks" && (
     <p style={{ fontSize: '0.8em', color: 'grey' }} className="whitespace-nowrap">
-      If you're facing any issues, please feel free to contact mattyjacks@gmail.com.
+      If you're facing any issues, please feel free to contact mattyjacks11@gmail.com.
     </p>
   )}
   {selectedRecipient === "Hypnosis Capital" && (
@@ -504,19 +504,28 @@ export function FormN() {
                 />
                 {showFields && (
   <div className="grid grid-cols-2 gap-4">
-    <FormField
-      control={form.control}
-      name="hourlyRate"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Hourly Rate</FormLabel>
-          <FormControl>
-            <Input placeholder="2.00" {...field} />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    
+<FormField
+  control={form.control}
+  name="hourlyRate"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Hourly Rate</FormLabel>
+      <div className="flex items-center border rounded-md">
+        <span className="px-2">$</span> {/* Dollar sign */}
+        <FormControl className="flex-grow">
+          <Input
+            placeholder="10.00"
+            {...field}
+            className="border-none focus:ring-0" // Remove border and focus ring from input
+          />
+        </FormControl>
+        <span className="px-2">USD</span> {/* Currency label */}
+      </div>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
     <FormField
       control={form.control}
       name="hoursWorked"
