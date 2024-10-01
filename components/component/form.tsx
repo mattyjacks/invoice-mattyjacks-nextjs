@@ -900,33 +900,34 @@ export function FormN() {
     onChange={(e) => handleFileUpload(e)} // Handle file upload
   />
 
-  <div className="flex space-x-4">
-    {/* Download JSON Button on the left */}
-    <Button
-      className="bg-green-500"
-      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '200px' }} // Equal width
-      onClick={handleDownloadJson}
-    >
-      Download JSON <FileJson className="size-5 ml-2" />
-    </Button>
+<div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 justify-center w-full">
+  {/* Download JSON Button */}
+  <Button
+    className="bg-green-500 w-full md:w-1/2 xl:w-1/3"
+    style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '40px' }} // Set equal height
+    onClick={handleDownloadJson}
+  >
+    Download JSON <FileJson className="size-5 ml-2" />
+  </Button>
 
-    {/* Upload JSON Button on the right */}
-    <Button
-      className="bg-blue-500"
-      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '200px' }} // Equal width
-      onClick={(e) => {
-        e.preventDefault(); // Prevent form validation
-        setTimeout(() => {
-          const inputElement = document.getElementById("jsonFileInput");
-          if (inputElement) {
-            inputElement.click(); // Open the file dialog
-          }
-        }, 0); // Delay to ensure the DOM is ready
-      }}
-    >
-      Upload JSON <FileJson className="size-5 ml-2" />
-    </Button>
-  </div>
+  {/* Upload JSON Button */}
+  <Button
+    className="bg-blue-500 w-full md:w-1/2 xl:w-1/3"
+    style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '40px' }} // Set equal height
+    onClick={(e) => {
+      e.preventDefault(); // Prevent form validation
+      setTimeout(() => {
+        const inputElement = document.getElementById("jsonFileInput");
+        if (inputElement) {
+          inputElement.click(); // Open the file dialog
+        }
+      }, 0); // Delay to ensure the DOM is ready
+    }}
+  >
+    Upload JSON <FileJson className="size-5 ml-2" />
+  </Button>
+</div>
+
 </CardFooter>
 
 
