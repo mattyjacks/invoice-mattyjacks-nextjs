@@ -413,9 +413,9 @@ export function FormN() {
       name="customEmail"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Custom Email</FormLabel>
+          <FormLabel>Custom Email to Invoice</FormLabel>
           <FormControl>
-            <Input placeholder="Enter custom email" {...field} />
+            <Input placeholder="Enter Custom Email" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -639,7 +639,7 @@ export function FormN() {
                           <SelectItem value="paypal">
                             Paypal Goods and Services
                           </SelectItem>
-                          <SelectItem value="others">
+                          <SelectItem value="Other">
                             Other as Discussed
                           </SelectItem>
                         </SelectContent>

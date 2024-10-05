@@ -11,7 +11,8 @@ const InvoicePreview = ({ control }: { control: any }) => {
     if (value && value !== "") {
       return (
         <div className="mb-2">
-          <span className="font-semibold text-white">{label}:</span> <span className="text-gray-500">{value}</span>
+          <span className="font-semibold text-white">{label}:</span>{" "}
+          <span className="text-gray-500">{value}</span>
         </div>
       );
     }
@@ -47,7 +48,7 @@ const InvoicePreview = ({ control }: { control: any }) => {
     } else if (invoiceId.startsWith("MJ")) {
       return { name: "MattyJacks", email: "mattyjacks11@gmail.com" };
     } else if (invoiceId.startsWith("HC")) {
-      return { name: "Hypnosis Capital", email: "hypnosiscapital.com" };
+      return { name: "Hypnosis Capital", email: "hypnosiscapital@gmail.com" };
     } else if (invoiceId.startsWith("FB")) {
       return { name: "FirebringerAI", email: "Matt@firebringerai.com" };
     } else if (invoiceId.startsWith("Inv")) {
@@ -134,115 +135,136 @@ Notes: ${formValues.notes}
   };
 
   return (
-    <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white">Invoice Overview</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <h3 className="text-lg font text-white">Invoice Details</h3>
-          {renderField("Invoice ID", formValues.invoiceId)}
-          {renderField("Sending Invoice To", `${getInvoiceDetails().name} `)}
-          {renderField("Email Being Invoiced", getInvoiceDetails().email)} {/* New line */}
-          {renderField("Email Subject Line", `Invoice ${formValues.invoiceId} for ${formValues.fullLegalName} on ${format(new Date(), "MMMM do, yyyy")}`)}
-          {renderField("Invoice Date EST", format(toZonedTime(new Date(), 'America/New_York'), "EEEE, MMMM do, yyyy 'at' p 'EST'"))}
-          {renderField("Invoice Date Local", format(new Date(), "EEEE, MMMM do, yyyy 'at' p") + ` (${getUtcOffset()})`)}
-          {renderField("Invoice Date GMT", format(toZonedTime(new Date(), 'GMT'), "EEEE, MMMM do, yyyy 'at' p 'GMT'"))}
+    <>
+
+
+    {/* Instruction Section */}
+    <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative mt-2">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-white">Instructions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-gray-500">
+          Email this invoice to the Email Being Invoiced. Click the "Copy Email Subject" and use that as the Email Subject. Click the "Copy Email Content" and use that as the Email Content.
+            </p>
+          
+        </CardContent>
+      </Card>
+
+      
+      {/* Invoice Preview */}
+      <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative mt-8">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-white">Invoice Overview</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <h3 className="text-lg font text-white">Invoice Details</h3>
+            {renderField("Invoice ID", formValues.invoiceId)}
+            {renderField("Sending Invoice To", `${getInvoiceDetails().name} `)}
+            {renderField("Email Being Invoiced", getInvoiceDetails().email)} {/* New line */}
+            {renderField("Email Subject Line", `Invoice ${formValues.invoiceId} for ${formValues.fullLegalName} on ${format(new Date(), "MMMM do, yyyy")}`)}
+            {renderField("Invoice Date EST", format(toZonedTime(new Date(), 'America/New_York'), "EEEE, MMMM do, yyyy 'at' p 'EST'"))}
+            {renderField("Invoice Date Local", format(new Date(), "EEEE, MMMM do, yyyy 'at' p") + ` (${getUtcOffset()})`)}
+            {renderField("Invoice Date GMT", format(toZonedTime(new Date(), 'GMT'), "EEEE, MMMM do, yyyy 'at' p 'GMT'"))}
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-white">Personal Info</h3>
+            {renderField("Full Name", formValues.fullLegalName)}
+            {renderField("Email", formValues.email)}
+            {renderField("Discord Display Name", formValues.discordDisplayName)}
+            {renderField("Discord Username", formValues.discordUsername)}
+            {renderField("Phone Number", formValues.phoneNumber)}
+            {renderField("Reddit Username", formValues.redditUsername)}
+            {renderField("Country", formValues.country)}
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-white">Payment Info</h3>
+            {renderField("Invoice Type", formValues.invoiceType)}
+            {formValues.invoiceType === "hourly" && (
+              <>
+                {renderField("Hourly Rate", `$${formValues.hourlyRate}`)}
+                {renderField("Hours Worked", formValues.hoursWorked)}
+              </>
+            )}
+            {renderField("Invoice Amount", `$${formValues.invoiceAmount}`)}
+            {renderField("Invoice Status", formValues.invoiceStatus)}
+            {renderField("Payment Method", formValues.paymentMethod)}
+
+            {formValues.paymentMethod === "paypal" && (
+              <>
+                {renderField("PayPal Email", formValues.paypalEmail)}
+                {renderField(
+                  "PayPal Account Holder",
+                  formValues.isPayPalAccountHolder ? "Yes" : "No"
+                )}
+              </>
+            )}
+
+            {formValues.paymentMethod === "ltc-crypto" &&
+              renderField("LTC Wallet Address", formValues.ltcWalletAddress)}
+
+            {formValues.paymentMethod === "others" &&
+              renderField("Other Payment Details", formValues.otherPaymentDetails)}
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-white">Additional Info</h3>
+            {renderField("Task Description", formValues.taskDescription)}
+            {renderField("Notes", formValues.notes)}
+          </div>
+        </CardContent>
+
+        <div className="absolute right-5 top-8 md:flex md:flex-col md:space-y-4 hidden md:block">
+          {/* Copy Email Subject Button */}
+          <button
+            onClick={copyInvoiceAndName}
+            className="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-500 flex items-center justify-center space-x-1"
+            style={{ minHeight: '30px' }}
+          >
+            <span>Copy Email Subject</span>
+            <ClipboardIcon />
+          </button>
+
+          {/* Copy Email Content Button */}
+          <button
+            onClick={copyToClipboard}
+            className="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-500 flex items-center justify-center space-x-1"
+            style={{ minHeight: '30px' }}
+          >
+            <span>Copy Email Content</span>
+            <ClipboardIcon />
+          </button>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-white">Personal Info</h3>
-          {renderField("Full Name", formValues.fullLegalName)}
-          {renderField("Email", formValues.email)}
-          {renderField("Discord Display Name", formValues.discordDisplayName)}
-          {renderField("Discord Username", formValues.discordUsername)}
-          {renderField("Phone Number", formValues.phoneNumber)}
-          {renderField("Reddit Username", formValues.redditUsername)}
-          {renderField("Country", formValues.country)}
+        {/* For mobile view */}
+        <div className="flex flex-col space-y-4 md:hidden justify-end">
+          {/* Copy Email Subject Button */}
+          <button
+            onClick={copyInvoiceAndName}
+            className="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-500 flex items-center justify-center space-x-1"
+            style={{ minHeight: '30px' }}
+          >
+            <span>Copy Email Subject</span>
+            <ClipboardIcon />
+          </button>
+
+          {/* Copy Email Content Button */}
+          <button
+            onClick={copyToClipboard}
+            className="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-500 flex items-center justify-center space-x-1"
+            style={{ minHeight: '30px' }}
+          >
+            <span>Copy Email Content</span>
+            <ClipboardIcon />
+          </button>
         </div>
+      </Card>
 
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-white">Payment Info</h3>
-          {renderField("Invoice Type", formValues.invoiceType)}
-          {formValues.invoiceType === "hourly" && (
-            <>
-              {renderField("Hourly Rate", `$${formValues.hourlyRate}`)}
-              {renderField("Hours Worked", formValues.hoursWorked)}
-            </>
-          )}
-          {renderField("Invoice Amount", `$${formValues.invoiceAmount}`)}
-          {renderField("Invoice Status", formValues.invoiceStatus)}
-          {renderField("Payment Method", formValues.paymentMethod)}
-
-          {formValues.paymentMethod === "paypal" && (
-            <>
-              {renderField("PayPal Email", formValues.paypalEmail)}
-              {renderField(
-                "PayPal Account Holder",
-                formValues.isPayPalAccountHolder ? "Yes" : "No"
-              )}
-            </>
-          )}
-
-          {formValues.paymentMethod === "ltc-crypto" &&
-            renderField("LTC Wallet Address", formValues.ltcWalletAddress)}
-
-          {formValues.paymentMethod === "others" &&
-            renderField("Other Payment Details", formValues.otherPaymentDetails)}
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-white">Additional Info</h3>
-          {renderField("Task Description", formValues.taskDescription)}
-          {renderField("Notes", formValues.notes)}
-        </div>
-      </CardContent>
-
-      <div className="absolute right-5 top-8 md:flex md:flex-col md:space-y-4 hidden md:block">
-        {/* Copy Email Subject Button */}
-        <button
-          onClick={copyInvoiceAndName}
-          className="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-500 flex items-center justify-center space-x-1"
-          style={{ minHeight: '30px' }}
-        >
-          <span>Copy Email Subject</span>
-          <ClipboardIcon />
-        </button>
-
-        {/* Copy Email Content Button */}
-        <button
-          onClick={copyToClipboard}
-          className="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-500 flex items-center justify-center space-x-1"
-          style={{ minHeight: '30px' }}
-        >
-          <span>Copy Email Content</span>
-          <ClipboardIcon />
-        </button>
-      </div>
-
-      {/* For mobile view */}
-      <div className="flex flex-col space-y-4 md:hidden justify-end">
-        {/* Copy Email Subject Button */}
-        <button
-          onClick={copyInvoiceAndName}
-          className="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-500 flex items-center justify-center space-x-1"
-          style={{ minHeight: '30px' }}
-        >
-          <span>Copy Email Subject</span>
-          <ClipboardIcon />
-        </button>
-
-        {/* Copy Email Content Button */}
-        <button
-          onClick={copyToClipboard}
-          className="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-500 flex items-center justify-center space-x-1"
-          style={{ minHeight: '30px' }}
-        >
-          <span>Copy Email Content</span>
-          <ClipboardIcon />
-        </button>
-      </div>
-    </Card>
+      
+    </>
   );
 };
 
