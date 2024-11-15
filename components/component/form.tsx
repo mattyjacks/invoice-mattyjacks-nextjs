@@ -682,7 +682,7 @@ export function FormN() {
   Are you the owner of this PayPal account? If it's someone else's account, DO NOT CHECK THIS BOX!{" "}
   <br />
   <span style={{ fontSize: '0.8em', color: 'grey' }}>
-    Description
+    Note that it's glitchy right now. Ignore the date of birth.
   </span>
   <TooltipProvider>
     <Tooltip>
@@ -700,7 +700,7 @@ export function FormN() {
                         </FormItem>
                       )}
                     />
-                    {form.watch("isPayPalAccountHolder") === false && (
+                    {form.watch("isPayPalAccountHolder") === true && (
                       <FormField
                         control={form.control}
                         name="paypalDob"
