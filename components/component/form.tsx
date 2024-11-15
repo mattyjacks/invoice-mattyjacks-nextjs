@@ -89,7 +89,7 @@ const formSchema = z.object({
   customName: z.string().optional(),
   customEmail: z.string().email().optional(),
   paypalEmail: z.string().optional(),
-  paypalDob: z.date().optional().nullable(),
+  paypalDob: z.date().optional(),
   invoiceType: z.enum(["one-time", "hourly"]),
   invoiceAmount: z.string().optional(),
   hourlyRate: z.string().optional(),
@@ -164,7 +164,7 @@ export function FormN() {
       paypalEmail: "",
       invoiceType: "one-time",
       invoiceAmount: "",
-      paypalDob: null,
+      paypalDob: "",
       hourlyRate: "",
       isPayPalAccountHolder: false,
       hoursWorked: "",
@@ -670,67 +670,84 @@ export function FormN() {
                       control={form.control}
                       name="isPayPalAccountHolder"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+                        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
-                              onCheckedChange={(checked) => {
-                                field.onChange(checked);
-                                if (!checked) {
-                                  form.setValue('paypalDob', null); // Reset DOB when unchecking
-                                }
-                              }}
+                              onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>
-                              Are you the owner of this PayPal account?
-                            </FormLabel>
-                            <FormDescription>
-                              If this is someone else's PayPal account, leave this unchecked.
-                            </FormDescription>
+                          <div>
+                          <FormDescription className="flex flex-col items-start">
+  Are you the owner of this PayPal account? If it's someone else's account, DO NOT CHECK THIS BOX!{" "}
+  <br />
+  <span style={{ fontSize: '0.8em', color: 'grey' }}>
+    Note that it's glitchy right now. Ignore the date of birth.
+  </span>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipContent>
+        <p>
+          Placeholder Tooltip for PayPal account non-holder
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</FormDescription>
+
+
                           </div>
                         </FormItem>
                       )}
                     />
-                    {form.watch("isPayPalAccountHolder") && (
+                    {form.watch("isPayPalAccountHolder") === true && (
                       <FormField
                         control={form.control}
                         name="paypalDob"
                         render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Date of Birth</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                  >
-                                    {field.value ? (
-                                      format(field.value, "PPP")
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() || date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
+                          <FormItem className="flex flex-col ">
+                            <FormLabel>Your Date of Birth</FormLabel>
+                            <FormControl>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button
+                                      variant={"outline"}
+                                      className={cn(
+                                        "w-[240px] pl-3 text-left font-normal bg-transparent",
+                                        !field.value && "text-muted-foreground"
+                                      )}
+                                    >
+                                      {field.value ? (
+                                        format(field.value, "PPP")
+                                      ) : (
+                                        <span>Pick a date</span>
+                                      )}
+                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
+                                  <Calendar
+                                    mode="single"
+                                    selected={
+                                      field.value
+                                        ? new Date(field.value)
+                                        : undefined
+                                    }
+                                    onSelect={field.onChange}
+                                    disabled={(date) =>
+                                      date > new Date() ||
+                                      date < new Date("1900-01-01")
+                                    }
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
