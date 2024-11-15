@@ -700,7 +700,7 @@ export function FormN() {
                         </FormItem>
                       )}
                     />
-                    {form.watch("isPayPalAccountHolder") === true && (
+                    {form.watch("isPayPalAccountHolder") === false && (
                       <FormField
                         control={form.control}
                         name="paypalDob"
