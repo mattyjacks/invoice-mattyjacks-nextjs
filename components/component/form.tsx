@@ -679,7 +679,7 @@ export function FormN() {
                           </FormControl>
                           <div>
                           <FormDescription className="flex flex-col items-start">
-  Are you the owner of this PayPal account? If it's someone else's account, DO NOT CHECK THIS BOX!{" "}
+                          Check this box if you are NOT the owner of the PayPal account{" "}
   <br />
   <span style={{ fontSize: '0.8em', color: 'grey' }}>
     Note that it's glitchy right now. Ignore the date of birth.
