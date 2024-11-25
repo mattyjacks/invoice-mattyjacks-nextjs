@@ -682,7 +682,7 @@ export function FormN() {
                           Check this box if you are NOT the owner of the PayPal account{" "}
   <br />
   <span style={{ fontSize: '0.8em', color: 'grey' }}>
-    Note that it's glitchy right now. Ignore the date of birth.
+  Due to PayPal rules, we require date of birth for sending to anyone who does not own the account.
   </span>
   <TooltipProvider>
     <Tooltip>
