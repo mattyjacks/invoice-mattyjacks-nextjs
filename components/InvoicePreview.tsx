@@ -3,6 +3,7 @@ import { useWatch } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ClipboardIcon } from "@radix-ui/react-icons";
 import { format, toZonedTime } from "date-fns-tz";
+import { format as formatDate } from "date-fns";
 
 const InvoicePreview = ({ control }: { control: any }) => {
   const formValues = useWatch({ control });
@@ -92,6 +93,7 @@ Phone Number: ${formValues.phoneNumber}
 Reddit Username: ${formValues.redditUsername}
 Country: ${formValues.country}
 
+
 Payment Info
 Invoice Type: ${formValues.invoiceType}
 ${formValues.invoiceType === "hourly" ? `Hourly Rate: $${formValues.hourlyRate}` : ""}
@@ -100,7 +102,9 @@ Invoice Amount: $${formValues.invoiceAmount}
 Invoice Status: ${formValues.invoiceStatus}
 Payment Method: ${formValues.paymentMethod}
 ${formValues.paymentMethod === "paypal" ? `PayPal Email: ${formValues.paypalEmail}` : ""}
-${formValues.paymentMethod === "paypal" ? `PayPal Account Holder: ${formValues.isPayPalAccountHolder ? "Yes" : "No"}` : ""}
+${formValues.paymentMethod === "paypal" ? `PayPal Account Holder: ${formValues.isPayPalAccountHolder ? "No" : "Yes"}` : ""}
+${formValues.paymentMethod === "paypal" && !formValues.isPayPalAccountHolder ? `Date of Birth: ${formValues.paypalDob ? formatDate(formValues.paypalDob, "MMMM do, yyyy") : "N/A"}` : ""}
+Date of Birth: ${formValues.isPayPalAccountHolder && formValues.paypalDob ? formatDate(formValues.paypalDob, "MMMM do, yyyy") : "N/A"}
 ${formValues.paymentMethod === "ltc-crypto" ? `LTC Wallet Address: ${formValues.ltcWalletAddress}` : ""}
 ${formValues.paymentMethod === "others" ? `Other Payment Details: ${formValues.otherPaymentDetails}` : ""}
 
@@ -136,22 +140,18 @@ Notes: ${formValues.notes}
 
   return (
     <>
-
-
-    {/* Instruction Section */}
-    <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative mt-2">
+      {/* Instruction Section */}
+      <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative mt-2">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white">Instructions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-500">
-          Email this invoice to the Email Being Invoiced. Click the "Copy Email Subject" and use that as the Email Subject. Click the "Copy Email Content" and use that as the Email Content.
-            </p>
-          
+            Email this invoice to the Email Being Invoiced. Click the "Copy Email Subject" and use that as the Email Subject. Click the "Copy Email Content" and use that as the Email Content.
+          </p>
         </CardContent>
       </Card>
 
-      
       {/* Invoice Preview */}
       <Card className="max-w-3xl mx-auto p-6 sm:p-8 relative mt-8">
         <CardHeader>
@@ -170,15 +170,16 @@ Notes: ${formValues.notes}
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-white">Personal Info</h3>
-            {renderField("Full Name", formValues.fullLegalName)}
-            {renderField("Email", formValues.email)}
-            {renderField("Discord Display Name", formValues.discordDisplayName)}
-            {renderField("Discord Username", formValues.discordUsername)}
-            {renderField("Phone Number", formValues.phoneNumber)}
-            {renderField("Reddit Username", formValues.redditUsername)}
-            {renderField("Country", formValues.country)}
-          </div>
+  <h3 className="text-lg font-semibold text-white">Personal Info</h3>
+  {renderField("Full Name", formValues.fullLegalName)}
+  {renderField("Email", formValues.email)}
+  {renderField("Discord Display Name", formValues.discordDisplayName)}
+  {renderField("Discord Username", formValues.discordUsername)}
+  {renderField("Phone Number", formValues.phoneNumber)}
+  {renderField("Reddit Username", formValues.redditUsername)}
+  {renderField("Country", formValues.country)}
+  
+</div>
 
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-white">Payment Info</h3>
@@ -198,8 +199,9 @@ Notes: ${formValues.notes}
                 {renderField("PayPal Email", formValues.paypalEmail)}
                 {renderField(
                   "PayPal Account Holder",
-                  formValues.isPayPalAccountHolder ? "Yes" : "No"
+                  formValues.isPayPalAccountHolder ? "No" : "Yes"
                 )}
+                {formValues.isPayPalAccountHolder && renderField("Date of Birth", formValues.paypalDob ? formatDate(formValues.paypalDob, "MMMM do, yyyy") : "N/A")}
               </>
             )}
 
@@ -262,8 +264,6 @@ Notes: ${formValues.notes}
           </button>
         </div>
       </Card>
-
-      
     </>
   );
 };
