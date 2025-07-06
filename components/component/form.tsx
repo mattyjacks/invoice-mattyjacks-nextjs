@@ -911,6 +911,8 @@ export function FormN() {
                           <SelectItem value="FOREIGN RESEARCH AND DEVELOPMENT">FOREIGN RESEARCH AND DEVELOPMENT</SelectItem>
                           <SelectItem value="UNITED STATES RESEARCH AND DEVELOPMENT">UNITED STATES RESEARCH AND DEVELOPMENT</SelectItem>
                           <SelectItem value="ADVERTISING">ADVERTISING</SelectItem>
+                          <SelectItem value="OTHER">OTHER</SelectItem>
+                          <SelectItem value="UNKNOWN">UNKNOWN</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
