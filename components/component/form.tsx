@@ -104,6 +104,7 @@ const formSchema = z.object({
   invoiceId: z.string(),
   otherPaymentDetails: z.string().optional(),
   isPayPalAccountHolder: z.boolean().default(false),
+  accountingCategory: z.string().optional(),
 });
 
 
@@ -174,9 +175,15 @@ export function FormN() {
       paymentMethod: "",
       otherPaymentDetails: "",
       notes: "",
-      invoiceId: generateInvoiceID("MattyJacks"),
+      accountingCategory: "",
+      invoiceId: "", // Initialize with empty string to avoid hydration errors
     },
   });
+
+  // Set the invoiceId after component mounts to avoid hydration errors
+  useEffect(() => {
+    form.setValue("invoiceId", generateInvoiceID("MattyJacks"));
+  }, [form]);
 
   const generateJsonData = () => {
     const formData = form.getValues();
@@ -370,11 +377,14 @@ export function FormN() {
   <FormLabel>Send Invoice To</FormLabel>
   <Select
      onValueChange={(newValue) => {
-      if (newValue === "custom") {
-        form.setValue("invoiceId", "INV-" + Math.random().toString(36).substr(2, 7).toUpperCase());
-      } else {
-        form.setValue("invoiceId", generateInvoiceID(newValue));
-      }
+      // Use setTimeout to ensure this runs client-side only
+      setTimeout(() => {
+        if (newValue === "custom") {
+          form.setValue("invoiceId", "INV-" + Math.random().toString(36).substr(2, 7).toUpperCase());
+        } else {
+          form.setValue("invoiceId", generateInvoiceID(newValue));
+        }
+      }, 0);
       setSelectedRecipient(newValue);
     }}
     defaultValue={"MattyJacks"}
@@ -878,6 +888,33 @@ export function FormN() {
                     <FormMessage />
                   </FormItem>
                   
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="accountingCategory"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Accounting Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select accounting category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="SUBCONTRACTED CLIENT WORK">SUBCONTRACTED CLIENT WORK</SelectItem>
+                          <SelectItem value="FOREIGN RESEARCH AND DEVELOPMENT">FOREIGN RESEARCH AND DEVELOPMENT</SelectItem>
+                          <SelectItem value="UNITED STATES RESEARCH AND DEVELOPMENT">UNITED STATES RESEARCH AND DEVELOPMENT</SelectItem>
+                          <SelectItem value="ADVERTISING">ADVERTISING</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
                 

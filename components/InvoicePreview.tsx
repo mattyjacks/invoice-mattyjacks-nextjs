@@ -111,6 +111,7 @@ ${formValues.paymentMethod === "others" ? `Other Payment Details: ${formValues.o
 Additional Info
 Task Description: ${formValues.taskDescription}
 Notes: ${formValues.notes}
+Accounting Category: ${formValues.accountingCategory || "Not specified"}
 `;
     navigator.clipboard
       .writeText(content)
@@ -216,6 +217,7 @@ Notes: ${formValues.notes}
             <h3 className="text-lg font-semibold text-white">Additional Info</h3>
             {renderField("Task Description", formValues.taskDescription)}
             {renderField("Notes", formValues.notes)}
+            {renderField("Accounting Category", formValues.accountingCategory)}
           </div>
         </CardContent>
 
